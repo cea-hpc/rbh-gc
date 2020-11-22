@@ -5,6 +5,7 @@
  * SPDX-License-Identifer: LGPL-3.0-or-later
  */
 
+#include <assert.h>
 #include <errno.h>
 #include <error.h>
 #include <fcntl.h>
@@ -35,6 +36,10 @@ exit_backend(void)
         rbh_backend_destroy(backend);
 }
 
+/*----------------------------------------------------------------------------*
+ |                                  usage()                                   |
+ *----------------------------------------------------------------------------*/
+
 static void
 usage(void)
 {
@@ -55,11 +60,192 @@ usage(void)
     printf(message, program_invocation_short_name);
 }
 
+/*----------------------------------------------------------------------------*
+ |                                    gc()                                    |
+ *----------------------------------------------------------------------------*/
+
+    /*--------------------------------------------------------------------*
+     |                          open_by_id_at()                           |
+     *--------------------------------------------------------------------*/
+
+static int
+open_by_id_at(int mount_fd, const struct rbh_id *id, int flags)
+{
+    (void)mount_fd;
+    (void)id;
+    (void)flags;
+    error(EX_SOFTWARE, ENOSYS, "open_by_id_at");
+    __builtin_unreachable();
+}
+
+    /*--------------------------------------------------------------------*
+     |                       iter_fsentry2delete()                        |
+     *--------------------------------------------------------------------*/
+
+struct fsentry2delete_iterator {
+    struct rbh_iterator iterator;
+
+    struct rbh_iterator *fsentries;
+    struct rbh_fsevent delete;
+};
+
+static const void *
+fsentry2delete_iter_next(void *iterator)
+{
+    struct fsentry2delete_iterator *deletes = iterator;
+
+    while (true) {
+        const struct rbh_fsentry *fsentry;
+        int fd;
+
+        fsentry = rbh_iter_next(deletes->fsentries);
+        if (fsentry == NULL)
+            return NULL;
+        assert((fsentry->mask & RBH_FP_ID) == RBH_FP_ID);
+
+        errno = 0;
+        fd = open_by_id_at(mount_fd, &fsentry->id, O_RDONLY);
+        if (fd < 0 && errno != ENOENT && errno != ESTALE)
+            /* Something happened, something bad... */
+            error(EXIT_FAILURE, errno, "open_by_handle_at");
+
+        if (fd >= 0) {
+            /* The entry still exists somewhere in the filesystem
+             *
+             * Let's not delete it yet.
+             */
+            if (close(fd))
+                /* This should never happen */
+                error(EXIT_FAILURE, errno, "unexpected error on close");
+            continue;
+        }
+
+        deletes->delete.id = fsentry->id;
+        return &deletes->delete;
+    }
+}
+
+static void
+fsentry2delete_iter_destroy(void *iterator)
+{
+    struct fsentry2delete_iterator *deletes = iterator;
+
+    rbh_iter_destroy(deletes->fsentries);
+    free(deletes);
+}
+
+static const struct rbh_iterator_operations FSENTRY2DELETE_ITER_OPS = {
+    .next = fsentry2delete_iter_next,
+    .destroy = fsentry2delete_iter_destroy,
+};
+
+static const struct rbh_iterator FSENTRY2DELETE_ITERATOR = {
+    .ops = &FSENTRY2DELETE_ITER_OPS,
+};
+
+static struct rbh_iterator *
+iter_fsentry2delete(struct rbh_iterator *fsentries)
+{
+    struct fsentry2delete_iterator *deletes;
+
+    deletes = malloc(sizeof(*deletes));
+    if (deletes == NULL)
+        error(EXIT_FAILURE, errno, "malloc");
+
+    deletes->iterator = FSENTRY2DELETE_ITERATOR;
+    deletes->fsentries = fsentries;
+    return &deletes->iterator;
+}
+
+    /*--------------------------------------------------------------------*
+     |                          iter_constify()                           |
+     *--------------------------------------------------------------------*/
+
+/* XXX: maybe this deserves a place in robinhood/itertools.h? */
+struct constify_iterator {
+    struct rbh_iterator iterator;
+
+    struct rbh_mut_iterator *subiter;
+    void *element;
+};
+
+static const void *
+constify_iter_next(void *iterator)
+{
+    struct constify_iterator *constify = iterator;
+
+    free(constify->element);
+    constify->element = rbh_mut_iter_next(constify->subiter);
+    return constify->element;
+}
+
+static void
+constify_iter_destroy(void *iterator)
+{
+    struct constify_iterator *constify = iterator;
+
+    free(constify->element);
+    rbh_mut_iter_destroy(constify->subiter);
+    free(constify);
+}
+
+static const struct rbh_iterator_operations CONSTIFY_ITER_OPS = {
+    .next = constify_iter_next,
+    .destroy = constify_iter_destroy,
+};
+
+static const struct rbh_iterator CONSTIFY_ITERATOR = {
+    .ops = &CONSTIFY_ITER_OPS,
+};
+
+static struct rbh_iterator *
+iter_constify(struct rbh_mut_iterator *iterator)
+{
+    struct constify_iterator *constify;
+
+    constify = malloc(sizeof(*constify));
+    if (constify == NULL)
+        error(EXIT_FAILURE, errno, "malloc");
+
+    constify->iterator = CONSTIFY_ITERATOR;
+    constify->subiter = iterator;
+    constify->element = NULL;
+    return &constify->iterator;
+}
+
 static void
 gc(void)
 {
-    error(EX_SOFTWARE, ENOSYS, "gc");
+    const struct rbh_filter_options OPTIONS = {
+        .projection = {
+            .fsentry_mask = RBH_FP_ID,
+        },
+    };
+    struct rbh_mut_iterator *fsentries;
+    struct rbh_iterator *constify;
+    struct rbh_iterator *deletes;
+
+    /* Set the backend in a "garbage collection" mode */
+    if (rbh_backend_set_option(backend, RBH_GBO_GC, (bool[]){true},
+                               sizeof(bool)))
+        error(EXIT_FAILURE, errno, "rbh_backend_set_option");
+
+    fsentries = rbh_backend_filter(backend, NULL, &OPTIONS);
+    if (fsentries == NULL)
+        error(EXIT_FAILURE, errno, "rbh_backend_filter");
+
+    constify = iter_constify(fsentries);
+    deletes = iter_fsentry2delete(constify);
+
+    if (rbh_backend_update(backend, deletes) == -1)
+        error(EXIT_FAILURE, errno, "rbh_backend_update");
+
+    rbh_iter_destroy(deletes);
 }
+
+/*----------------------------------------------------------------------------*
+ |                                    cli                                     |
+ *----------------------------------------------------------------------------*/
 
 int
 main(int argc, char *argv[])
