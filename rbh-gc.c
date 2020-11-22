@@ -12,6 +12,7 @@
 #include <getopt.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <sysexits.h>
 #include <unistd.h>
 
@@ -68,14 +69,35 @@ usage(void)
      |                          open_by_id_at()                           |
      *--------------------------------------------------------------------*/
 
+static struct file_handle *
+id2handle(const struct rbh_id *id)
+{
+    struct file_handle *handle;
+
+    handle = malloc(sizeof(*handle) + id->size - sizeof(int));
+    if (handle == NULL)
+        error(EXIT_FAILURE, errno, "malloc");
+
+    memcpy(&handle->handle_type, id->data, sizeof(int));
+    memcpy(handle->f_handle, id->data + sizeof(int), id->size - sizeof(int));
+    handle->handle_bytes = id->size - sizeof(int);
+
+    return handle;
+}
+
 static int
 open_by_id_at(int mount_fd, const struct rbh_id *id, int flags)
 {
-    (void)mount_fd;
-    (void)id;
-    (void)flags;
-    error(EX_SOFTWARE, ENOSYS, "open_by_id_at");
-    __builtin_unreachable();
+    struct file_handle *handle = id2handle(id);
+    int save_errno;
+    int fd;
+
+    /* This requires CAP_DAC_READ_SEARCH */
+    fd = open_by_handle_at(mount_fd, handle, flags);
+    save_errno = errno;
+    free(handle);
+    errno = save_errno;
+    return fd;
 }
 
     /*--------------------------------------------------------------------*
@@ -104,7 +126,8 @@ fsentry2delete_iter_next(void *iterator)
         assert((fsentry->mask & RBH_FP_ID) == RBH_FP_ID);
 
         errno = 0;
-        fd = open_by_id_at(mount_fd, &fsentry->id, O_RDONLY);
+        fd = open_by_id_at(mount_fd, &fsentry->id,
+                           O_RDONLY | O_NOFOLLOW | O_PATH);
         if (fd < 0 && errno != ENOENT && errno != ESTALE)
             /* Something happened, something bad... */
             error(EXIT_FAILURE, errno, "open_by_handle_at");
