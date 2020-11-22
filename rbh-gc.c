@@ -7,10 +7,33 @@
 
 #include <errno.h>
 #include <error.h>
+#include <fcntl.h>
 #include <getopt.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <sysexits.h>
+#include <unistd.h>
+
+#include <robinhood/utils.h>
+
+static struct rbh_backend *backend;
+static int mount_fd = -1;
+
+static void __attribute__((destructor))
+exit_mount_fd(void)
+{
+    if (mount_fd < 0)
+        return;
+    if (close(mount_fd))
+        error(EXIT_FAILURE, errno, "close");
+}
+
+static void __attribute__((destructor))
+exit_backend(void)
+{
+    if (backend)
+        rbh_backend_destroy(backend);
+}
 
 static void
 usage(void)
@@ -70,6 +93,14 @@ main(int argc, char *argv[])
         error(EX_USAGE, 0, "not enough arguments");
     if (argc > 2)
         error(EX_USAGE, 0, "unexpected argument: %s", argv[2]);
+
+    /* Parse BACKEND */
+    backend = rbh_backend_from_uri(argv[0]);
+
+    /* Parse PATH */
+    mount_fd = open(argv[1], O_RDONLY);
+    if (mount_fd < 0)
+        error(EXIT_FAILURE, errno, "open: %s", argv[1]);
 
     gc();
     return EXIT_SUCCESS;
