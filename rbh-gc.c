@@ -12,6 +12,7 @@
 #include <getopt.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <sysexits.h>
 #include <unistd.h>
 
@@ -71,11 +72,20 @@ usage(void)
 static int
 open_by_id_at(int mount_fd, const struct rbh_id *id, int flags)
 {
-    (void)mount_fd;
-    (void)id;
-    (void)flags;
-    error(EX_SOFTWARE, ENOSYS, "open_by_id_at");
-    __builtin_unreachable();
+    struct file_handle *handle;
+    int save_errno;
+    int fd;
+
+    handle = rbh_file_handle_from_id(id);
+    if (handle == NULL)
+        error(EXIT_FAILURE, errno, "rbh_file_handle_from_id");
+
+    /* This requires CAP_DAC_READ_SEARCH */
+    fd = open_by_handle_at(mount_fd, handle, flags);
+    save_errno = errno;
+    free(handle);
+    errno = save_errno;
+    return fd;
 }
 
     /*--------------------------------------------------------------------*
