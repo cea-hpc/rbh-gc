@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c133a2e1_3b023b4e",
+        "filename": "rbh-gc.c",
+        "patchSetId": 5
+      },
+      "lineNbr": 157,
+      "author": {
+        "id": 1010215
+      },
+      "writtenOn": "2020-11-26T08:39:34Z",
+      "side": 1,
+      "message": "(defect) missing \"deletes-\u003edelete.type \u003d RBH_FET_DELETE;\"",
+      "revId": "9a45440dfae73d75048eb79c776ab325b4f8f161",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    }
+  ]
+}
