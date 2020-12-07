@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c044fa3e_ae2500d5",
+        "filename": "rbh-gc.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1017196
+      },
+      "writtenOn": "2020-12-07T09:11:21Z",
+      "side": 1,
+      "message": "question: is there a way id-\u003esize is lesser than sizeof(int)?",
+      "range": {
+        "startLine": 82,
+        "startChar": 53,
+        "endLine": 82,
+        "endChar": 75
+      },
+      "revId": "e0ec6a8f2e6e480033a2f3e14d452678ba0bc63a",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    }
+  ]
+}
