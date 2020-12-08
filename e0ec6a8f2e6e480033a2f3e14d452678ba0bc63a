@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "c3367ee2_ade95d6e",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 6
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1003556
+      },
+      "writtenOn": "2020-12-08T11:06:34Z",
+      "side": 1,
+      "message": "(functional)",
+      "revId": "e0ec6a8f2e6e480033a2f3e14d452678ba0bc63a",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "c044fa3e_ae2500d5",
         "filename": "rbh-gc.c",
         "patchSetId": 6
@@ -37,6 +54,30 @@
       "side": 1,
       "message": "Yes and no. As mentioned in this commit [0]:\n\n\u003e * While not mandated by design, this ID is expected to have a very specific\n\u003e * format which allows it to be converted to/from a struct file_handle.\n\nThe same assumption can be found in the posix backend implementation.\n\nI think it can be qualified as a bug. Will fix.\n\nhttps://github.com/cea-hpc/librobinhood/commit/c1a41984985b0e828db083a722530fc315e987b9",
       "parentUuid": "c044fa3e_ae2500d5",
+      "range": {
+        "startLine": 82,
+        "startChar": 53,
+        "endLine": 82,
+        "endChar": 75
+      },
+      "revId": "e0ec6a8f2e6e480033a2f3e14d452678ba0bc63a",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6ac1564c_4c0e9612",
+        "filename": "rbh-gc.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1003556
+      },
+      "writtenOn": "2020-12-08T11:06:34Z",
+      "side": 1,
+      "message": "I think a flag \"file_handle-compatible\" for backends that all current backend set might make sense, but assuming that ids here can be shorter than int doesn\u0027t really since the whole mechanism here relies on open_by_handle_at.",
+      "parentUuid": "f6253425_58797906",
       "range": {
         "startLine": 82,
         "startChar": 53,
