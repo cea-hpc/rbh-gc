@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8e88c151_27de192f",
+        "filename": "rbh-gc.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1003556
+      },
+      "writtenOn": "2020-12-08T10:47:42Z",
+      "side": 1,
+      "message": "I\u0027m not sure what calling exit again from a destructor does, I think it might be better to just print a warning.\n\nIn general for programs I\u0027d advise just leaking the fd (over something as overkill as a destructor) as the kernel will do this kind of cleanup properly, but I guess this can be useful for dynamic code analysis...",
+      "revId": "565c41ff5c2971da6ff035f01b3834a883f4454f",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "69e3accd_d957fdfa",
+        "filename": "rbh-gc.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 101,
+      "author": {
+        "id": 1003556
+      },
+      "writtenOn": "2020-12-08T10:47:42Z",
+      "side": 1,
+      "message": "(I don\u0027t think O_NOFOLLOW makes sense here, one could want to use the tool with a symlink to some partial tree even if I wouldn\u0027t recommend it. At the very least I don\u0027t think gc is intended to be used on a single entry?)",
+      "revId": "565c41ff5c2971da6ff035f01b3834a883f4454f",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e646153e_fab393d4",
+        "filename": "rbh-gc.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 1003556
+      },
+      "writtenOn": "2020-12-08T10:47:42Z",
+      "side": 1,
+      "message": "(nitpick) I think it might make sense to check a bit more e.g. that mount_fd is different from the root filesystem unless forced or something similar like robinhood v3 does (prevents running before having mounted correct fs), but that can come later.",
+      "revId": "565c41ff5c2971da6ff035f01b3834a883f4454f",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    }
+  ]
+}
