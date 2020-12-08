@@ -55,6 +55,24 @@
     },
     {
       "key": {
+        "uuid": "38c6264a_7d2e08ea",
+        "filename": "rbh-gc.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 120,
+      "author": {
+        "id": 1010215
+      },
+      "writtenOn": "2020-12-08T23:24:01Z",
+      "side": 1,
+      "message": "I agree that debugging in rbh-v4 is going to be a pain.\n\nMy current plan is to assume most errors won\u0027t ever happen.\nIf they do happen, either often, or consistently, then I will try to handle them as well as possible.\n\nRight now, I feel like I lack hindsight into which sort of errors are going to pop out, and what sort of information users/I will want/need.\n\nIn my mind, I try to compare myself to find, or ls, or du. How often do these fail with something other than \"no such file or directory\" or \"permission denied\"? And when they do, for some transient reason, like an IO error, or something like that, how much information do I need but something that tells me \"try again in a second\" or \"sorry, \u003cthis piece of hardware\u003e is likely failing, you\u0027re on your own, good luck\".\n\nAnd yet, the comparison is a little flawed, find has a debug mode that can spit out a lot of information. Most software has. I guess this is 50% me not having strong enough opinions on error handling, and how to do logging, 25% not finding convincing solutions out there, and 25% deliberately postponing the issue.",
+      "parentUuid": "fea5519a_cbc6bd36",
+      "revId": "009962c98748cb71bfa900b1988711847e80ce47",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "dcc00006_1a8917ac",
         "filename": "rbh-gc.c",
         "patchSetId": 6
@@ -105,6 +123,24 @@
       "revId": "009962c98748cb71bfa900b1988711847e80ce47",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bc34531a_a6a43a1d",
+        "filename": "rbh-gc.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 158,
+      "author": {
+        "id": 1010215
+      },
+      "writtenOn": "2020-12-08T23:24:01Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "9a18a0e6_47fd0c15",
+      "revId": "009962c98748cb71bfa900b1988711847e80ce47",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
     },
     {
       "key": {
