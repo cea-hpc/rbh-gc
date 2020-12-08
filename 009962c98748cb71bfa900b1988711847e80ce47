@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "b1d8e58f_b3d8a39d",
+        "filename": "rbh-gc.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 120,
+      "author": {
+        "id": 1010215
+      },
+      "writtenOn": "2020-12-08T15:05:35Z",
+      "side": 1,
+      "message": "I don\u0027t have a lot to work with, do you mean the id?",
+      "parentUuid": "fac3c2f2_ddb4e403",
+      "revId": "009962c98748cb71bfa900b1988711847e80ce47",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "dcc00006_1a8917ac",
         "filename": "rbh-gc.c",
         "patchSetId": 6
@@ -30,6 +48,24 @@
       "writtenOn": "2020-12-08T10:59:39Z",
       "side": 1,
       "message": "other fields of deletes-\u003edelete aren\u0027t initialized, so except id and type we have uninitialized values there -- might want to memset(0)?",
+      "revId": "009962c98748cb71bfa900b1988711847e80ce47",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "dffc3180_49b5eeb4",
+        "filename": "rbh-gc.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 158,
+      "author": {
+        "id": 1010215
+      },
+      "writtenOn": "2020-12-08T15:05:35Z",
+      "side": 1,
+      "message": "It is sort of a personal challenge for me to only initialize what I need.\nIt may be good for performance in some cases, but I have to admit this is not one of those cases.\n\nI rely on the undefined-behviour sanitizer (libubsan) to catch most mistakes.\nI agree it is not bullet-proof.\n\n-----\n\nTo answer the question, here it is safe to do so. For an RBH_FET_DELETE fsevent, only the `type\u0027 and `id\u0027 fields shall ever be accessed.\nAcessing any other field is undefined behaviour by design.",
+      "parentUuid": "dcc00006_1a8917ac",
       "revId": "009962c98748cb71bfa900b1988711847e80ce47",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": true
@@ -50,6 +86,24 @@
       "revId": "009962c98748cb71bfa900b1988711847e80ce47",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "db3ca042_215ac75c",
+        "filename": "rbh-gc.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 166,
+      "author": {
+        "id": 1010215
+      },
+      "writtenOn": "2020-12-08T15:05:35Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "e041cbbd_d0ec7485",
+      "revId": "009962c98748cb71bfa900b1988711847e80ce47",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
     }
   ]
 }
