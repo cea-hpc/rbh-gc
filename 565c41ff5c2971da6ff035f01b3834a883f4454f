@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "ae99de5f_daee0241",
+        "filename": "rbh-gc.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1010215
+      },
+      "writtenOn": "2020-12-08T14:54:00Z",
+      "side": 1,
+      "message": "I used it in constructors, it works well, not sure about destructors (I know it is advised against in atexit()\u0027s man page, but that\u0027s about atexit, which probably does thing a little differently).\n\nThe problem I have is that I\u0027d like the program to complete with a non-zero exit status. I don\u0027t really see how to do this without calling exit() from a destructor.",
+      "parentUuid": "8e88c151_27de192f",
+      "revId": "565c41ff5c2971da6ff035f01b3834a883f4454f",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "69e3accd_d957fdfa",
         "filename": "rbh-gc.c",
         "patchSetId": 2
