@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "fea5519a_cbc6bd36",
+        "filename": "rbh-gc.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 120,
+      "author": {
+        "id": 1003556
+      },
+      "writtenOn": "2020-12-08T16:08:00Z",
+      "side": 1,
+      "message": "id, fd number, anything we can print should be printed in case of errors in my opinon.\nIn that case the error is very unlikely so it\u0027s probably not worth spending a lot of time improving this particular message, but I think debugging problems in rbh v4 will be sometimes quite difficult :)",
+      "parentUuid": "b1d8e58f_b3d8a39d",
+      "revId": "009962c98748cb71bfa900b1988711847e80ce47",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "dcc00006_1a8917ac",
         "filename": "rbh-gc.c",
         "patchSetId": 6
@@ -66,6 +84,24 @@
       "side": 1,
       "message": "It is sort of a personal challenge for me to only initialize what I need.\nIt may be good for performance in some cases, but I have to admit this is not one of those cases.\n\nI rely on the undefined-behviour sanitizer (libubsan) to catch most mistakes.\nI agree it is not bullet-proof.\n\n-----\n\nTo answer the question, here it is safe to do so. For an RBH_FET_DELETE fsevent, only the `type\u0027 and `id\u0027 fields shall ever be accessed.\nAcessing any other field is undefined behaviour by design.",
       "parentUuid": "dcc00006_1a8917ac",
+      "revId": "009962c98748cb71bfa900b1988711847e80ce47",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9a18a0e6_47fd0c15",
+        "filename": "rbh-gc.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 158,
+      "author": {
+        "id": 1003556
+      },
+      "writtenOn": "2020-12-08T16:08:00Z",
+      "side": 1,
+      "message": "I\u0027m not sure I agree nowadays (except for things like very hot paths with absolutely no syscalls), but that\u0027s a matter of policy so if you\u0027re ok with that let\u0027s go with it. If tests always run with ubsan it\u0027s a good start anyway.",
+      "parentUuid": "dffc3180_49b5eeb4",
       "revId": "009962c98748cb71bfa900b1988711847e80ce47",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": true
