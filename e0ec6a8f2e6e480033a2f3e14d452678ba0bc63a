@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "9d2a1706_a74678ad",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 6
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1010215
+      },
+      "writtenOn": "2020-12-08T15:16:07Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c3367ee2_ade95d6e",
+      "revId": "e0ec6a8f2e6e480033a2f3e14d452678ba0bc63a",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c044fa3e_ae2500d5",
         "filename": "rbh-gc.c",
         "patchSetId": 6
@@ -78,6 +96,30 @@
       "side": 1,
       "message": "I think a flag \"file_handle-compatible\" for backends that all current backend set might make sense, but assuming that ids here can be shorter than int doesn\u0027t really since the whole mechanism here relies on open_by_handle_at.",
       "parentUuid": "f6253425_58797906",
+      "range": {
+        "startLine": 82,
+        "startChar": 53,
+        "endLine": 82,
+        "endChar": 75
+      },
+      "revId": "e0ec6a8f2e6e480033a2f3e14d452678ba0bc63a",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c9637543_f5216e83",
+        "filename": "rbh-gc.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1010215
+      },
+      "writtenOn": "2020-12-08T15:16:07Z",
+      "side": 1,
+      "message": "My fear is that a malicious actor could insert a bad fsentry record in a robinhood backend to trigger a buffer overflow. I have a fix on the way.\n\nThe flag is a good idea, but this information is not really tied to backends per-se.\nFor example, the mongo backend makes no assumption about the format of IDs.\n\nIt is more of a per-fsentry information. I __think__ that just trying to handle IDs like they are file-handles, and failing gracefully if they obviously aren\u0027t is a good middle ground (\"obviously\" as in: not the right size, or rejected by open_by_handle_at()).",
+      "parentUuid": "6ac1564c_4c0e9612",
       "range": {
         "startLine": 82,
         "startChar": 53,
