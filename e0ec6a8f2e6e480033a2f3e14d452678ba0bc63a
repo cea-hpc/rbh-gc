@@ -177,6 +177,30 @@
       "revId": "e0ec6a8f2e6e480033a2f3e14d452678ba0bc63a",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "88e6d476_f687edd2",
+        "filename": "rbh-gc.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1010215
+      },
+      "writtenOn": "2020-12-11T17:35:43Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4110f3cb_247ec63a",
+      "range": {
+        "startLine": 82,
+        "startChar": 53,
+        "endLine": 82,
+        "endChar": 75
+      },
+      "revId": "e0ec6a8f2e6e480033a2f3e14d452678ba0bc63a",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
     }
   ]
 }
