@@ -16,6 +16,7 @@
 #include <sysexits.h>
 #include <unistd.h>
 
+#include <robinhood.h>
 #include <robinhood/utils.h>
 
 static struct rbh_backend *backend;
@@ -169,62 +170,6 @@ iter_fsentry2delete(struct rbh_iterator *fsentries)
     return &deletes->iterator;
 }
 
-    /*--------------------------------------------------------------------*
-     |                          iter_constify()                           |
-     *--------------------------------------------------------------------*/
-
-/* XXX: maybe this deserves a place in robinhood/itertools.h? */
-struct constify_iterator {
-    struct rbh_iterator iterator;
-
-    struct rbh_mut_iterator *subiter;
-    void *element;
-};
-
-static const void *
-constify_iter_next(void *iterator)
-{
-    struct constify_iterator *constify = iterator;
-
-    free(constify->element);
-    constify->element = rbh_mut_iter_next(constify->subiter);
-    return constify->element;
-}
-
-static void
-constify_iter_destroy(void *iterator)
-{
-    struct constify_iterator *constify = iterator;
-
-    free(constify->element);
-    rbh_mut_iter_destroy(constify->subiter);
-    free(constify);
-}
-
-static const struct rbh_iterator_operations CONSTIFY_ITER_OPS = {
-    .next = constify_iter_next,
-    .destroy = constify_iter_destroy,
-};
-
-static const struct rbh_iterator CONSTIFY_ITERATOR = {
-    .ops = &CONSTIFY_ITER_OPS,
-};
-
-static struct rbh_iterator *
-iter_constify(struct rbh_mut_iterator *iterator)
-{
-    struct constify_iterator *constify;
-
-    constify = malloc(sizeof(*constify));
-    if (constify == NULL)
-        error(EXIT_FAILURE, errno, "malloc");
-
-    constify->iterator = CONSTIFY_ITERATOR;
-    constify->subiter = iterator;
-    constify->element = NULL;
-    return &constify->iterator;
-}
-
 static void
 gc(void)
 {
@@ -246,7 +191,7 @@ gc(void)
     if (fsentries == NULL)
         error(EXIT_FAILURE, errno, "rbh_backend_filter");
 
-    constify = iter_constify(fsentries);
+    constify = rbh_iter_constify(fsentries);
     deletes = iter_fsentry2delete(constify);
 
     if (rbh_backend_update(backend, deletes) == -1)
