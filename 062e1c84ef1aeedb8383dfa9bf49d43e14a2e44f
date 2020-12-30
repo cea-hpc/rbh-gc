@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "32d1b3fb_f114156b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1010215
+      },
+      "writtenOn": "2020-12-30T21:40:08Z",
+      "side": 1,
+      "message": "librobinhood was updated (it now includes a definition of rbh_iter_constify())",
+      "revId": "062e1c84ef1aeedb8383dfa9bf49d43e14a2e44f",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    }
+  ]
+}
